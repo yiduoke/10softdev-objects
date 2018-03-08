@@ -1,7 +1,7 @@
 // I don't know how to objectify this 
 // you can't make an svg circle one of your own objects
 // the only attribute of these circles that changes is their
-// color, which if you can't objectify
+// color, which you can't objectify
 
 var NS="http://www.w3.org/2000/svg";
 var svg = document.createElementNS(NS,"svg");
