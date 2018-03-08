@@ -11,25 +11,37 @@ document.body.appendChild(svg);
 
 var clear_button = document.getElementById("clear");
 
-var create = function(x, y){
-    var circle = document.createElementNS(NS, "circle");
-    circle.setAttribute("cx", x);
-    circle.setAttribute("cy", y);
-    circle.setAttribute("r", 12);
-    circle.setAttribute("fill", "red");
-    svg.appendChild(circle);
-    circle.addEventListener("click", new_color);
-}
-
-var new_color = function(click){
-    if (this.getAttribute("fill") == "red"){
-        this.setAttribute("fill", "green");
+var create_circle = function(x, y){
+    var circle_object = {
+        x: x,
+        y: y,
+        r: 12,
+        color: "red",
+        svg_circle: document.createElementNS(NS, "circle"),
+        remove: function(click){
+            var element = click.target;
+            click.stopPropagation();
+            if (element.getAttribute("fill") == "red"){
+                element.setAttribute("fill", "green");
+            }
+            else if(element.getAttribute("fill") == "green"){
+                svg.removeChild(element);
+                var cx = Math.floor(Math.random() * 501);
+                var cy = Math.floor(Math.random() * 501);
+                var thing = create_circle(cx, cy);
+                thing.display();
+            }
+        },
+        display: function(){
+            this.svg_circle.setAttribute("cx", this.x);
+            this.svg_circle.setAttribute("cy", this.y);
+            this.svg_circle.setAttribute("r", 12);
+            this.svg_circle.setAttribute("fill", "red");
+            svg.appendChild(this.svg_circle);
+            this.svg_circle.addEventListener("click", this.remove);
+        }
     }
-    else if (this.getAttribute("fill") == "green"){
-        svg.removeChild(this);
-        create(Math.floor(Math.random() * 501), Math.floor(Math.random() * 501));
-    }
-    click.stopPropagation();
+    return circle_object;
 }
 
 var new_circle = function(click){
@@ -37,7 +49,8 @@ var new_circle = function(click){
     var x = click.offsetX;
     var y = click.offsetY;
 
-    create(x, y);
+    var fake = create_circle(x,y);
+    fake.display();
 }
 
 var clear = function(click){
